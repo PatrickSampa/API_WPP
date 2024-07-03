@@ -3,18 +3,16 @@ version: '3.8'
 services:
   api_zdg:
     image: chrishubert/whatsapp-web-api:latest
-    networks:
-      - comunidadezdg
-    volumes:
-    - api_zdg_sessions:/usr/src/app/sessions
+    ports:
+      - "3000:3000"  # Mapeia a porta 3000 do host para a porta 3000 do container
     environment:
-      - API_KEY=comunidadezdg  # OPTIONAL
-      - BASE_WEBHOOK_URL=https://api2024.comunidadezdg.com.br/localCallbackExample
+      - API_KEY=tintas123  # OPTIONAL
+      - BASE_WEBHOOK_URL=http://192.168.0.93:3000/localCallbackExample 
       - ENABLE_LOCAL_CALLBACK_EXAMPLE=TRUE # OPTIONAL, NOT RECOMMENDED FOR PRODUCTION
       - MAX_ATTACHMENT_SIZE=5000000 # IN BYTES
       - SET_MESSAGES_AS_SEEN=TRUE # WILL MARK THE MESSAGES AS READ AUTOMATICALLY
       # ALL CALLBACKS: auth_failure|authenticated|call|change_state|disconnected|group_join|group_leave|group_update|loading_screen|media_uploaded|message|message_ack|message_create|message_reaction|message_revoke_everyone|qr|ready|contact_changed
-      - DISABLED_CALLBACKS=message_ack  # PREVENT SENDING CERTAIN TYPES OF CALLBACKS BACK TO THE WEBHOOK
+      - DISABLED_CALLBACKS=message_ack|message_reaction  # PREVENT SENDING CERTAIN TYPES OF CALLBACKS BACK TO THE WEBHOOK
       - ENABLE_SWAGGER_ENDPOINT=TRUE # OPTIONAL, ENABLES THE /api-docs ENDPOINT
     deploy:
       mode: replicated
@@ -35,13 +33,3 @@ services:
         - traefik.http.routers.api_zdg.service=api_zdg
         - traefik.http.services.api_zdg.loadbalancer.server.port=3000
         - traefik.http.services.api_zdg.loadbalancer.passHostHeader=true
-
-volumes:
-  api_zdg_sessions:
-    external: true
-    name: api_zdg_sessions
-
-networks:
-  comunidadezdg:
-    name: comunidadezdg
-    external: true
