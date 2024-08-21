@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   api_zdg:
-    image: chrishubert/whatsapp-web-api:latest
+    image: patricksampa/api-wpp:1.0
     ports:
       - "3000:3000"  # Mapeia a porta 3000 do host para a porta 3000 do container
     environment:
